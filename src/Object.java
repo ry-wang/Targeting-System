@@ -27,6 +27,9 @@ public class Object {
 	public double getDistance() {
 		return distance;
 	}
+	public void setRadius(int input) {
+		r = input;
+	}
 	public void setDistance(double input) {
 		distance = input;
 	}
@@ -48,13 +51,15 @@ public class Object {
 		
 		g.fillOval(x, y, r, r);
 		
-		if (colorType.equalsIgnoreCase("black")) 
+		if ((colorType.equalsIgnoreCase("black")) ||(colorType.equalsIgnoreCase("blue"))) {
 			g.setColor(Color.white);
-		else 
+		}
+		else {
 			g.setColor(Color.black);
+		}
 		
 		//Display Number of object
-		g.drawString(String.valueOf(number), x, y);
+		g.drawString(String.valueOf(number), x + r/2, y + r/2);
 	}
 
 }
