@@ -34,6 +34,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 
 	private Turret turret;
 	private Object objectArray[];
+	private JSlider slider;
 
 	/**
 	 * Launch the application.
@@ -90,7 +91,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		sldRange = new JSlider();
 		sldRange.setValue(300);
 		sldRange.setMinimum(100);
-		sldRange.setMaximum(600);
+		sldRange.setMaximum(pnlContent.getHeight());
 		sldRange.setBounds(260, 490, 200, 26);
 		sldRange.addChangeListener(this);
 		contentPane.add(sldRange);
@@ -112,6 +113,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		lblTargetNum.setBounds(543, 520, 123, 26);
 		contentPane.add(lblTargetNum);
 		
+		slider = new JSlider();
+		slider.setBounds(762, 390, 200, 50);
+		contentPane.add(slider);
+
+		turret = new Turret(0, 0, 10, range);
 		pnlContent.repaint();
 	}
 
@@ -119,7 +125,6 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		if (e.getActionCommand().equalsIgnoreCase("Generate")) {
 			range = sldRange.getValue();
 			generateObjects();
-			turret = new Turret(0, 0, 10, range);
 		}
 
 	}
@@ -171,36 +176,43 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 	}
 
 	public void stateChanged(ChangeEvent evt) {
-		if (sldSize == evt.getSource()) {
-			if (sldSize.getValue() == 1) {
-				ballSize = 20; // Radius
+		if (objectArray != null) {
+			if (sldSize == evt.getSource()) {
+				if (sldSize.getValue() == 1) {
+					ballSize = 20; // Radius
+				}
+				else if (sldSize.getValue() == 2) {
+					ballSize = 35;
+				}
+				else {
+					ballSize = 50;
+				}
+				for (int i = 0; i < objectArray.length; i++) {
+					objectArray[i].setRadius(ballSize);
+				}
+				
 			}
-			else if (sldSize.getValue() == 2) {
-				ballSize = 35;
-			}
-			else {
-				ballSize = 50;
-			}
-			for (int i = 0; i < objectArray.length; i++) {
-				objectArray[i].setRadius(ballSize);
-			}
-			pnlContent.repaint();
+		}
+		else {
+			sldSize.setValue(2);
 		}
 		if (sldRange == evt.getSource()) {
 			range = sldRange.getValue();
 			if (turret != null) {
 				turret.setRange(range);
-				pnlContent.repaint();
 			}
 		}
 		if (sldTargetNum == evt.getSource()) {
 			totalNumTargets = sldTargetNum.getValue();
+			return;
 		}
+		
+		pnlContent.repaint();
 	}
 
 	class panelContent extends JPanel {
 		panelContent() {
-			this.setBounds(2, 2, 700, 450);
+			this.setBounds(2, 10, 700, 450);
 			this.setBorder(BorderFactory.createBevelBorder(0));
 		}
 		public void paintComponent(Graphics g) {
