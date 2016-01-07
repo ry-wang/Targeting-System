@@ -28,6 +28,12 @@ public class Turret {
 	public void setRange(int newRange) {
 		range = newRange;
 	}
+	public void setX(int input) {
+		x = input;
+	}
+	public void setY(int input) {
+		y = input;
+	}
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);

@@ -13,6 +13,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -30,11 +31,12 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 	private JSlider sldSize;
 	private JSlider sldRange;
 	private JSlider sldTargetNum;
-
+	private JSlider sldTurretX;
+	private JSlider sldTurretY;
 
 	private Turret turret;
 	private Object objectArray[];
-	private JSlider slider;
+
 
 	/**
 	 * Launch the application.
@@ -65,9 +67,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		turret = new Turret(0, 0, 10, range);
 
 		JButton btnGenerate = new JButton("Generate");
-		btnGenerate.setBounds(805, 480, 137, 52);
+		btnGenerate.setBounds(790, 480, 137, 52);
 		contentPane.add(btnGenerate);
 		btnGenerate.addActionListener(this);
 		btnGenerate.setActionCommand("Generate");
@@ -112,12 +116,34 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		lblTargetNum.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTargetNum.setBounds(543, 520, 123, 26);
 		contentPane.add(lblTargetNum);
-		
-		slider = new JSlider();
-		slider.setBounds(762, 390, 200, 50);
-		contentPane.add(slider);
 
-		turret = new Turret(0, 0, 10, range);
+		sldTurretX = new JSlider();
+		sldTurretX.setBounds(758, 373, 200, 50);
+		sldTurretX.setMinimum(5);
+		sldTurretX.setValue(5);
+		sldTurretX.setMaximum(pnlContent.getWidth() - 10);
+		sldTurretX.addChangeListener(this);
+		contentPane.add(sldTurretX);
+
+		JLabel lblTurretX = new JLabel("Turret X Position");
+		lblTurretX.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTurretX.setBounds(790, 420, 137, 26);
+		contentPane.add(lblTurretX);
+
+		sldTurretY = new JSlider();
+		sldTurretY.setValue(5);
+		sldTurretY.setMinimum(5);
+		sldTurretY.setMaximum(pnlContent.getHeight() - turret.getRange());
+		sldTurretY.setBounds(758, 289, 200, 50);
+		sldTurretY.addChangeListener(this);
+		contentPane.add(sldTurretY);
+
+		JLabel lblTurretY = new JLabel("Turret Y Position");
+		lblTurretY.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTurretY.setBounds(790, 336, 137, 26);
+		contentPane.add(lblTurretY);
+
+		
 		pnlContent.repaint();
 	}
 
@@ -126,7 +152,6 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 			range = sldRange.getValue();
 			generateObjects();
 		}
-
 	}
 
 	public void generateObjects() {
@@ -167,6 +192,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 			objectArray[i] = new Object(x, y, ballSize, color);
 		}
 		setObjectNumber();
+		calculateDistances();
 		pnlContent.repaint();
 	}
 	public void setObjectNumber() {
@@ -190,17 +216,25 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 				for (int i = 0; i < objectArray.length; i++) {
 					objectArray[i].setRadius(ballSize);
 				}
-				
+
 			}
 		}
 		else {
 			sldSize.setValue(2);
 		}
+		
 		if (sldRange == evt.getSource()) {
 			range = sldRange.getValue();
 			if (turret != null) {
 				turret.setRange(range);
 			}
+		}
+		
+		if (sldTurretX == evt.getSource()) {
+			turret.setX(sldTurretX.getValue());
+		}
+		if (sldTurretY == evt.getSource()) {
+			turret.setY(sldTurretY.getValue());
 		}
 		if (sldTargetNum == evt.getSource()) {
 			totalNumTargets = sldTargetNum.getValue();
@@ -208,6 +242,18 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		}
 		
 		pnlContent.repaint();
+	}
+	
+	public void calculateDistances() {
+		double distance = 0;
+		for (int i = 0; i < objectArray.length; i++) {
+			distance += Math.pow(objectArray[i].getX() - turret.getX(), 2);
+			distance += Math.pow(objectArray[i].getY() - turret.getY(), 2);
+			objectArray[i].setDistance((Math.sqrt(distance) * 2.54)/96);
+			
+			//Temp Display
+			System.out.println("Object Number: " + (i+1) + "  Distance: " + objectArray[i].getDistance() + "cm");
+		}
 	}
 
 	class panelContent extends JPanel {
