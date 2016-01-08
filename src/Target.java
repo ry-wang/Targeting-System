@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.JTable;
 
 
 public class Target extends JFrame implements ActionListener, ChangeListener{
@@ -27,6 +28,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 	private int ballSize;
 	private int range;
 	private int totalNumTargets;
+	private int[] dataArray;
 
 	private JSlider sldSize;
 	private JSlider sldRange;
@@ -36,6 +38,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 
 	private Turret turret;
 	private Object objectArray[];
+	private JTable tblData;
 
 
 	/**
@@ -143,9 +146,17 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		lblTurretY.setBounds(790, 336, 137, 26);
 		contentPane.add(lblTurretY);
 
-		
+		setUpArray();
 		pnlContent.repaint();
 	}
+	
+	public void setUpArray() {
+		dataArray = new int[10];
+		for (int i = 0; i < dataArray.length; i++) {
+			dataArray[i] = 0;
+		}
+	}
+
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equalsIgnoreCase("Generate")) {
@@ -200,7 +211,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 			objectArray[i].setNumber((i + 1));
 		}
 	}
-
+	
 	public void stateChanged(ChangeEvent evt) {
 		if (objectArray != null) {
 			if (sldSize == evt.getSource()) {
@@ -232,9 +243,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		
 		if (sldTurretX == evt.getSource()) {
 			turret.setX(sldTurretX.getValue());
+			calculateDistances();
 		}
 		if (sldTurretY == evt.getSource()) {
 			turret.setY(sldTurretY.getValue());
+			calculateDistances();
 		}
 		if (sldTargetNum == evt.getSource()) {
 			totalNumTargets = sldTargetNum.getValue();
@@ -250,6 +263,8 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 			distance += Math.pow(objectArray[i].getX() - turret.getX(), 2);
 			distance += Math.pow(objectArray[i].getY() - turret.getY(), 2);
 			objectArray[i].setDistance((Math.sqrt(distance) * 2.54)/96);
+			
+			dataArray[i] = (int) objectArray[i].getDistance();
 			
 			//Temp Display
 			System.out.println("Object Number: " + (i+1) + "  Distance: " + objectArray[i].getDistance() + "cm");
