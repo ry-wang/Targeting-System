@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,7 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JTable;
 
 
-public class Target extends JFrame implements ActionListener, ChangeListener{
+public class Target extends JFrame implements ActionListener, ChangeListener, MouseMotionListener, MouseListener{
 
 	//Declaration of all GUI elements
 	private JPanel contentPane;
@@ -73,9 +76,6 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		//Create turret object
-		turret = new Turret(pnlContent.getWidth()/2, pnlContent.getHeight()/2, 10, 20);
 
 		//Generate button
 		JButton btnGenerate = new JButton("Generate");
@@ -87,6 +87,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		//Add new panelContent which is used for painting
 		pnlContent = new panelContent();
 		contentPane.add(pnlContent);
+		
+		//Create turret object
+		turret = new Turret(pnlContent.getWidth()/2, pnlContent.getHeight()/2, 10, 20);
+		//turret.addMouseListener(this);
+		
 
 		//Create slider for size
 		sldSize = new JSlider();
@@ -136,7 +141,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		sldTurretX = new JSlider();
 		sldTurretX.setBounds(758, 373, 200, 50);
 		sldTurretX.setMinimum(5);
-		sldTurretX.setValue(5);
+		sldTurretX.setValue(turret.getX());
 		sldTurretX.setMaximum(pnlContent.getWidth() - 10);
 		sldTurretX.addChangeListener(this);
 		contentPane.add(sldTurretX);
@@ -146,10 +151,12 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		lblTurretX.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTurretX.setBounds(790, 420, 137, 26);
 		contentPane.add(lblTurretX);
+		
+		
 
 		//Slider for turret y position
 		sldTurretY = new JSlider();
-		sldTurretY.setValue(5);
+		sldTurretY.setValue(turret.getY());
 		sldTurretY.setMinimum(5);
 		sldTurretY.setMaximum(pnlContent.getHeight() - turret.getRange());
 		sldTurretY.setBounds(758, 289, 200, 50);
@@ -161,6 +168,13 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 		lblTurretY.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTurretY.setBounds(790, 336, 137, 26);
 		contentPane.add(lblTurretY);
+		
+		
+		sldTurretX.setValue(turret.getX());
+		sldTurretY.setValue(turret.getY());
+		sldRange.setValue(turret.getRange());
+		
+		
 
 		//Set up data array, and repaint the panel
 		setUpArray();
@@ -258,10 +272,10 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 			if (turret != null) {
 				turret.setRange(range);
 			}
+			calculateDistances();
 		}
 		
 		if (sldTurretX == evt.getSource()) {
-			System.out.println("run");
 			turret.setX(sldTurretX.getValue());
 			calculateDistances();
 		}
@@ -278,16 +292,23 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 	}
 	
 	public void calculateDistances() {
+		if (objectArray == null) {
+			return;
+		}
 		double distance = 0;
 		//Calculate distance for each object to turret
 		for (int i = 0; i < objectArray.length; i++) {
 			distance = 0;
-			distance += Math.pow(objectArray[i].getX() - turret.getX(), 2);
-			distance += Math.pow(objectArray[i].getY() - turret.getY(), 2);
-			objectArray[i].setDistance(Math.sqrt(distance));
+			distance += Math.pow((objectArray[i].getX() + objectArray[i].getRadius()/2) - turret.getX() - turret.getRange()/2, 2);
+			distance += Math.pow((objectArray[i].getY() + objectArray[i].getRadius()/2) - turret.getX() - turret.getRange()/2, 2);
+			distance = Math.sqrt(distance);
+			objectArray[i].setDistance(distance);
 			
 			if (objectArray[i].getDistance() <= turret.getRange()) {
 				objectArray[i].setWithinRange(true);
+			}
+			else {
+				objectArray[i].setWithinRange(false);
 			}
 			
 			dataArray[i] = (int) objectArray[i].getDistance();
@@ -295,6 +316,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 			//Temp Display
 			System.out.println("Object Number: " + (i+1) + "  Distance: " + objectArray[i].getDistance() + "cm");
 		}
+		pnlContent.repaint();
+	}
+	
+	public void mouseDragged(MouseEvent me) {
+		
 	}
 
 	class panelContent extends JPanel {
@@ -314,8 +340,8 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 					if (objectArray[i].withinRange()) {
 						int x1= objectArray[i].getX()+ objectArray[i].getRadius()/2;
 						int y1 = objectArray[i].getY() + objectArray[i].getRadius()/2;
-						int x2 = turret.getX() + turret.getRange()/2;
-						int y2 = turret.getY() + turret.getRange()/2;
+						int x2 = turret.getX() + turret.getRadius()/2;
+						int y2 = turret.getY() + turret.getRadius()/2;;
 						g.drawLine(x1, y1, x2, y2);
 					}
 				}
@@ -324,5 +350,41 @@ public class Target extends JFrame implements ActionListener, ChangeListener{
 				turret.paint(g);
 			}
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

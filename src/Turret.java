@@ -34,6 +34,9 @@ public class Turret {
 	public void setY(int input) {
 		y = input;
 	}
+	public int getRadius() {
+		return radius;
+	}
 	
 	public void paint(Graphics g) {
 		//Drawing turret itself
@@ -42,6 +45,8 @@ public class Turret {
 		
 		//Drawing turret range
 		g.drawOval(x + radius/2 - range/2, y + radius/2 - range/2, range, range);
+		//For testing purposes
+		g.drawRect(x + radius/2 - range/2, y + radius/2 - range/2, range, range);
 	}
 
 }
