@@ -10,12 +10,14 @@ public class Object {
 	private double distance;
 	private String colorType;
 	private int number;
+	private boolean withinRange;
 	
 	Object(int xPos, int yPos, int radius, String cType) {
 		x = xPos;
 		y = yPos;
 		r = radius;
 		colorType = cType;
+		withinRange = false;
 	}
 	
 	public int getX() {
@@ -35,6 +37,15 @@ public class Object {
 	}
 	public void setNumber(int input) {
 		number = input;
+	}
+	public int getRadius() {
+		return r;
+	}
+	public void setWithinRange(boolean input) {
+		withinRange = input;
+	}
+	public boolean withinRange() {
+		return withinRange;
 	}
 	
 	public void paint(Graphics g) {

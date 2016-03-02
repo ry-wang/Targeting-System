@@ -36,11 +36,12 @@ public class Turret {
 	}
 	
 	public void paint(Graphics g) {
+		//Drawing turret itself
 		g.setColor(Color.BLACK);
-		g.fillOval(x + range/2, y + range/2, radius, radius);
+		g.fillOval(x, y, radius, radius);
 		
 		//Drawing turret range
-		g.drawOval(x, y, range, range);
+		g.drawOval(x + radius/2 - range/2, y + radius/2 - range/2, range, range);
 	}
 
 }
