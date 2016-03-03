@@ -14,9 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -32,7 +35,8 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 	private int ballSize;
 	private int range;
 	private int totalNumTargets;
-	private int[] dataArray;
+	private String[][] dataArray;
+	private String[] tableHeaders = new String[4];
 
 	private JSlider sldSize;
 	private JSlider sldRange;
@@ -44,6 +48,15 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 	private Turret turret;
 	private Object objectArray[];
 	private JTable tblData;
+	private JScrollPane scrollPane;
+
+	private JLabel lblTurretXPos;
+	private JLabel lblTurretYPos;
+	private JLabel lblTurretRange;
+
+	private JLabel lblTurretXValue;
+	private JLabel lblTurretYValue;
+	private JLabel lblTurretRangeValue;
 
 
 	/**
@@ -71,7 +84,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		//Setting the frame
 		setTitle("Targeting Demo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1000, 600);
+		setBounds(100, 100, 1200, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -79,7 +92,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 
 		//Generate button
 		JButton btnGenerate = new JButton("Generate");
-		btnGenerate.setBounds(790, 480, 137, 52);
+		btnGenerate.setBounds(781, 480, 137, 52);
 		contentPane.add(btnGenerate);
 		btnGenerate.addActionListener(this);
 		btnGenerate.setActionCommand("Generate");
@@ -87,11 +100,36 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		//Add new panelContent which is used for painting
 		pnlContent = new panelContent();
 		contentPane.add(pnlContent);
-		
+
 		//Create turret object
 		turret = new Turret(pnlContent.getWidth()/2, pnlContent.getHeight()/2, 10, 20);
 		//turret.addMouseListener(this);
-		
+
+		//Labels
+		lblTurretXPos = new JLabel("Turret X-Position:");
+		lblTurretXPos.setBounds(749, 349, 101, 14);
+		contentPane.add(lblTurretXPos);
+
+		lblTurretYPos = new JLabel("Turret Y-Position:");
+		lblTurretYPos.setBounds(900, 349, 101, 14);
+		contentPane.add(lblTurretYPos);
+
+		lblTurretRange = new JLabel("Turret Range:");
+		lblTurretRange.setBounds(1052, 349, 87, 14);
+		contentPane.add(lblTurretRange);
+
+		lblTurretXValue = new JLabel("");
+		lblTurretXValue.setBounds(855, 349, 46, 14);
+		contentPane.add(lblTurretXValue);
+
+		lblTurretYValue = new JLabel("");
+		lblTurretYValue.setBounds(1005, 349, 46, 14);
+		contentPane.add(lblTurretYValue);
+
+		lblTurretRangeValue = new JLabel("");
+		lblTurretRangeValue.setBounds(1138, 349, 46, 14);
+		contentPane.add(lblTurretRangeValue);
+
 
 		//Create slider for size
 		sldSize = new JSlider();
@@ -139,54 +177,65 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 
 		//Slider for turret x position
 		sldTurretX = new JSlider();
-		sldTurretX.setBounds(758, 373, 200, 50);
+		sldTurretX.setBounds(749, 389, 200, 50);
 		sldTurretX.setMinimum(5);
 		sldTurretX.setValue(turret.getX());
-		sldTurretX.setMaximum(pnlContent.getWidth() - 10);
+		sldTurretX.setMaximum(pnlContent.getWidth() - 15);
 		sldTurretX.addChangeListener(this);
 		contentPane.add(sldTurretX);
 
 		//Label for turret x position
 		JLabel lblTurretX = new JLabel("Turret X Position");
 		lblTurretX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTurretX.setBounds(790, 420, 137, 26);
+		lblTurretX.setBounds(781, 436, 137, 26);
 		contentPane.add(lblTurretX);
-		
-		
 
 		//Slider for turret y position
 		sldTurretY = new JSlider();
 		sldTurretY.setValue(turret.getY());
 		sldTurretY.setMinimum(5);
 		sldTurretY.setMaximum(pnlContent.getHeight() - turret.getRange());
-		sldTurretY.setBounds(758, 289, 200, 50);
+		sldTurretY.setBounds(960, 389, 200, 50);
 		sldTurretY.addChangeListener(this);
 		contentPane.add(sldTurretY);
 
 		//Label for turret y position
 		JLabel lblTurretY = new JLabel("Turret Y Position");
 		lblTurretY.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTurretY.setBounds(790, 336, 137, 26);
+		lblTurretY.setBounds(992, 436, 137, 26);
 		contentPane.add(lblTurretY);
-		
-		
+
+
 		sldTurretX.setValue(turret.getX());
 		sldTurretY.setValue(turret.getY());
 		sldRange.setValue(turret.getRange());
-		
-		
 
-		//Set up data array, and repaint the panel
-		setUpArray();
+		JButton btnExit = new JButton("Exit");
+		btnExit.setActionCommand("Exit");
+		btnExit.addActionListener(this);
+		btnExit.setBounds(992, 480, 137, 52);
+		contentPane.add(btnExit);
+
+		//Set up data array and JTable
+		setUpTableArrays();
+		tblData = new JTable(dataArray, tableHeaders);
+		scrollPane = new JScrollPane(tblData);
+		scrollPane.setBounds(749, 11, 411, 325);
+		tblData.setVisible(false);
+		contentPane.add(scrollPane);
+
 		pnlContent.repaint();
 	}
-	
+
 	//Method to initialize all the data entries to 0
-	public void setUpArray() {
-		dataArray = new int[10];
-		for (int i = 0; i < dataArray.length; i++) {
-			dataArray[i] = 0;
-		}
+	public void setUpTableArrays() {
+
+		tableHeaders[0] = "Number";
+		tableHeaders[1] = "Colour";
+		tableHeaders[2] = "Distance";
+		tableHeaders[3] = "Within Range";
+
+		dataArray = new String[10][4];
 	}
 
 	//Method to deal with button clicks
@@ -196,6 +245,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 			range = sldRange.getValue();
 			generateObjects();
 		}
+		if (e.getActionCommand().equalsIgnoreCase("Exit")) {
+			if (JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?") == 0) {
+				System.exit(0);
+			}
+		}
 	}
 
 	public void generateObjects() {
@@ -203,6 +257,17 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		int y;
 		String color = "";
 		int c;
+
+		//Removing rows from the table if a new set of objects are being generated, with total num less than before
+		if (totalNumTargets > 0 && totalNumTargets > sldTargetNum.getValue()) {
+			//Setting data to null
+			for (int i = sldTargetNum.getValue(); i < totalNumTargets; i++) {
+				dataArray[i][0] = "";
+				dataArray[i][1] = "";
+				dataArray[i][2] = "";
+				dataArray[i][3] = "";
+			}
+		}
 
 		//Get total number of targets from slider value, then create objectArray
 		totalNumTargets = sldTargetNum.getValue();
@@ -234,9 +299,18 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 			break;
 			default: color = "black";
 			}
+			//Creating object
 			objectArray[i] = new Object(x, y, ballSize, color);
+			//Setting info in dataArray
+			dataArray[i][1] = color;
+			dataArray[i][0] = String.valueOf(i+1);
 		}
+
+		tblData.setRowHeight((scrollPane.getHeight()-21)/totalNumTargets);
+
+		//Setting number attribute of each object
 		setObjectNumber();
+		//Calculate distances, which updates JTable, then repaint
 		calculateDistances();
 		pnlContent.repaint();
 	}
@@ -245,7 +319,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 			objectArray[i].setNumber((i + 1));
 		}
 	}
-	
+
 	public void stateChanged(ChangeEvent evt) {
 		if (objectArray != null) {
 			if (sldSize == evt.getSource()) {
@@ -266,31 +340,34 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		else {
 			sldSize.setValue(2);
 		}
-		
+
 		if (sldRange == evt.getSource()) {
 			range = sldRange.getValue();
 			if (turret != null) {
 				turret.setRange(range);
+				lblTurretRangeValue.setText(String.valueOf(turret.getRange()));
 			}
 			calculateDistances();
 		}
-		
+
 		if (sldTurretX == evt.getSource()) {
 			turret.setX(sldTurretX.getValue());
+			lblTurretXValue.setText(String.valueOf(turret.getX()));
 			calculateDistances();
 		}
 		if (sldTurretY == evt.getSource()) {
 			turret.setY(sldTurretY.getValue());
+			lblTurretYValue.setText(String.valueOf(turret.getY()));
 			calculateDistances();
 		}
 		if (sldTargetNum == evt.getSource()) {
 			totalNumTargets = sldTargetNum.getValue();
 			return;
 		}
-		
+
 		pnlContent.repaint();
 	}
-	
+
 	public void calculateDistances() {
 		if (objectArray == null) {
 			return;
@@ -299,33 +376,40 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		//Calculate distance for each object to turret
 		for (int i = 0; i < objectArray.length; i++) {
 			distance = 0;
-			distance += Math.pow((objectArray[i].getX() + objectArray[i].getRadius()/2) - turret.getX() - turret.getRange()/2, 2);
-			distance += Math.pow((objectArray[i].getY() + objectArray[i].getRadius()/2) - turret.getX() - turret.getRange()/2, 2);
+			//Pythagorean Theorem
+			distance += Math.pow(objectArray[i].getX() - turret.getX(), 2);
+			distance += Math.pow(objectArray[i].getY() - turret.getY(), 2);
 			distance = Math.sqrt(distance);
 			objectArray[i].setDistance(distance);
-			
-			if (objectArray[i].getDistance() <= turret.getRange()) {
+
+			//Set within range attribute of object to true when distance is close enough
+			if (objectArray[i].getDistance() - objectArray[i].getRadius()/2 <= (double)turret.getRange()/2) {
 				objectArray[i].setWithinRange(true);
+				dataArray[i][3] = "true";
 			}
 			else {
 				objectArray[i].setWithinRange(false);
+				dataArray[i][3] = "false";
 			}
-			
-			dataArray[i] = (int) objectArray[i].getDistance();
-			
+
+			dataArray[i][2] = String.valueOf((int) objectArray[i].getDistance());
+
 			//Temp Display
-			System.out.println("Object Number: " + (i+1) + "  Distance: " + objectArray[i].getDistance() + "cm");
+			System.out.println("Object Number: " + (i+1) + "  Distance: " + objectArray[i].getDistance() + "cm" + " " + turret.getRange());
 		}
 		pnlContent.repaint();
+		((AbstractTableModel) tblData.getModel()).fireTableDataChanged();
+		tblData.setVisible(true);
+		scrollPane.repaint();
 	}
-	
+
 	public void mouseDragged(MouseEvent me) {
-		
+
 	}
 
 	class panelContent extends JPanel {
 		panelContent() {
-			this.setBounds(2, 10, 700, 450);
+			this.setBounds(20, 10, 700, 450);
 			this.setBorder(BorderFactory.createBevelBorder(0));
 		}
 		public void paintComponent(Graphics g) {
@@ -338,10 +422,10 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 					objectArray[i].paint(g);
 					g.setColor(Color.blue);
 					if (objectArray[i].withinRange()) {
-						int x1= objectArray[i].getX()+ objectArray[i].getRadius()/2;
-						int y1 = objectArray[i].getY() + objectArray[i].getRadius()/2;
+						int x1= objectArray[i].getX();
+						int y1 = objectArray[i].getY();
 						int x2 = turret.getX() + turret.getRadius()/2;
-						int y2 = turret.getY() + turret.getRadius()/2;;
+						int y2 = turret.getY() + turret.getRadius()/2;
 						g.drawLine(x1, y1, x2, y2);
 					}
 				}
@@ -355,36 +439,36 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

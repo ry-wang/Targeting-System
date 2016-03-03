@@ -45,8 +45,6 @@ public class Turret {
 		
 		//Drawing turret range
 		g.drawOval(x + radius/2 - range/2, y + radius/2 - range/2, range, range);
-		//For testing purposes
-		g.drawRect(x + radius/2 - range/2, y + radius/2 - range/2, range, range);
 	}
 
 }

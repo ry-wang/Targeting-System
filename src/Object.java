@@ -21,13 +21,16 @@ public class Object {
 	}
 	
 	public int getX() {
-		return x;
+		return x + r/2;
 	}
 	public int getY() {
-		return y;
+		return y + r/2;
 	}
 	public double getDistance() {
 		return distance;
+	}
+	public String getColor() {
+		return colorType;
 	}
 	public void setRadius(int input) {
 		r = input;
