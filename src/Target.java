@@ -345,7 +345,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 			range = sldRange.getValue();
 			if (turret != null) {
 				turret.setRange(range);
-				lblTurretRangeValue.setText(String.valueOf(turret.getRange()));
+				lblTurretRangeValue.setText(String.valueOf(turret.getRange()/2));
 			}
 			calculateDistances();
 		}
