@@ -18,12 +18,15 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTable;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 
 public class Target extends JFrame implements ActionListener, ChangeListener, MouseMotionListener, MouseListener{
@@ -82,9 +85,9 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 	 */
 	public Target() {
 		//Setting the frame
-		setTitle("Targeting Demo");
+		setTitle("Targeting System");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1200, 600);
+		setBounds(100, 100, 1200, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -92,7 +95,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 
 		//Generate button
 		JButton btnGenerate = new JButton("Generate");
-		btnGenerate.setBounds(781, 480, 137, 52);
+		btnGenerate.setBounds(781, 520, 137, 52);
 		contentPane.add(btnGenerate);
 		btnGenerate.addActionListener(this);
 		btnGenerate.setActionCommand("Generate");
@@ -107,27 +110,27 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 
 		//Labels
 		lblTurretXPos = new JLabel("Turret X-Position:");
-		lblTurretXPos.setBounds(749, 349, 101, 14);
+		lblTurretXPos.setBounds(749, 389, 101, 14);
 		contentPane.add(lblTurretXPos);
 
 		lblTurretYPos = new JLabel("Turret Y-Position:");
-		lblTurretYPos.setBounds(900, 349, 101, 14);
+		lblTurretYPos.setBounds(900, 389, 101, 14);
 		contentPane.add(lblTurretYPos);
 
 		lblTurretRange = new JLabel("Turret Range:");
-		lblTurretRange.setBounds(1052, 349, 87, 14);
+		lblTurretRange.setBounds(1052, 389, 87, 14);
 		contentPane.add(lblTurretRange);
 
 		lblTurretXValue = new JLabel("");
-		lblTurretXValue.setBounds(855, 349, 46, 14);
+		lblTurretXValue.setBounds(855, 389, 46, 14);
 		contentPane.add(lblTurretXValue);
 
 		lblTurretYValue = new JLabel("");
-		lblTurretYValue.setBounds(1005, 349, 46, 14);
+		lblTurretYValue.setBounds(1005, 389, 46, 14);
 		contentPane.add(lblTurretYValue);
 
 		lblTurretRangeValue = new JLabel("");
-		lblTurretRangeValue.setBounds(1138, 349, 46, 14);
+		lblTurretRangeValue.setBounds(1138, 389, 46, 14);
 		contentPane.add(lblTurretRangeValue);
 
 
@@ -136,14 +139,14 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		sldSize.setMinimum(1);
 		sldSize.setMaximum(3);
 		sldSize.setValue(2);
-		sldSize.setBounds(20, 490, 200, 26);
+		sldSize.setBounds(20, 530, 200, 26);
 		sldSize.addChangeListener(this);
 		contentPane.add(sldSize);
 
 		//Size of target label
 		JLabel lblSize = new JLabel("Size of Target");
 		lblSize.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSize.setBounds(82, 520, 79, 26);
+		lblSize.setBounds(82, 560, 79, 26);
 		contentPane.add(lblSize);
 
 		//Create slider for range
@@ -151,14 +154,14 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		sldRange.setValue(300);
 		sldRange.setMinimum(20);
 		sldRange.setMaximum(pnlContent.getHeight() - 50);
-		sldRange.setBounds(260, 490, 200, 26);
+		sldRange.setBounds(260, 530, 200, 26);
 		sldRange.addChangeListener(this);
 		contentPane.add(sldRange);
 
 		//Turret Range label
 		JLabel lblRange = new JLabel("Turret Range");
 		lblRange.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRange.setBounds(322, 520, 79, 26);
+		lblRange.setBounds(322, 560, 79, 26);
 		contentPane.add(lblRange);
 
 		//Number of targets slider
@@ -166,18 +169,18 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		sldTargetNum.setValue(5);
 		sldTargetNum.setMinimum(1);
 		sldTargetNum.setMaximum(10);
-		sldTargetNum.setBounds(508, 490, 200, 26);
+		sldTargetNum.setBounds(508, 530, 200, 26);
 		contentPane.add(sldTargetNum);
 
 		//Label for Number of Targets
 		JLabel lblTargetNum = new JLabel("Number of Targets");
 		lblTargetNum.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTargetNum.setBounds(543, 520, 123, 26);
+		lblTargetNum.setBounds(543, 560, 123, 26);
 		contentPane.add(lblTargetNum);
 
 		//Slider for turret x position
 		sldTurretX = new JSlider();
-		sldTurretX.setBounds(749, 389, 200, 50);
+		sldTurretX.setBounds(749, 429, 200, 50);
 		sldTurretX.setMinimum(5);
 		sldTurretX.setValue(turret.getX());
 		sldTurretX.setMaximum(pnlContent.getWidth() - 15);
@@ -187,7 +190,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		//Label for turret x position
 		JLabel lblTurretX = new JLabel("Turret X Position");
 		lblTurretX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTurretX.setBounds(781, 436, 137, 26);
+		lblTurretX.setBounds(781, 476, 137, 26);
 		contentPane.add(lblTurretX);
 
 		//Slider for turret y position
@@ -195,14 +198,14 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		sldTurretY.setValue(turret.getY());
 		sldTurretY.setMinimum(5);
 		sldTurretY.setMaximum(pnlContent.getHeight() - turret.getRange());
-		sldTurretY.setBounds(960, 389, 200, 50);
+		sldTurretY.setBounds(960, 429, 200, 50);
 		sldTurretY.addChangeListener(this);
 		contentPane.add(sldTurretY);
 
 		//Label for turret y position
 		JLabel lblTurretY = new JLabel("Turret Y Position");
 		lblTurretY.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTurretY.setBounds(992, 436, 137, 26);
+		lblTurretY.setBounds(992, 476, 137, 26);
 		contentPane.add(lblTurretY);
 
 
@@ -213,16 +216,35 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		JButton btnExit = new JButton("Exit");
 		btnExit.setActionCommand("Exit");
 		btnExit.addActionListener(this);
-		btnExit.setBounds(992, 480, 137, 52);
+		btnExit.setBounds(992, 520, 137, 52);
 		contentPane.add(btnExit);
 
 		//Set up data array and JTable
 		setUpTableArrays();
 		tblData = new JTable(dataArray, tableHeaders);
 		scrollPane = new JScrollPane(tblData);
-		scrollPane.setBounds(749, 11, 411, 325);
+		scrollPane.setBounds(749, 51, 411, 325);
 		tblData.setVisible(false);
 		contentPane.add(scrollPane);
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(0, 0, 1184, 21);
+		contentPane.add(menuBar);
+		
+		JMenu menu = new JMenu("File");
+		menuBar.add(menu);
+		
+		JMenuItem menuItem1 = new JMenuItem("About");
+		menuItem1.setPreferredSize(new Dimension(150, menu.getPreferredSize().height));
+		menuItem1.addActionListener(this);
+		menuItem1.setActionCommand("About");
+		menu.add(menuItem1);
+		
+		JMenuItem menuItem2 = new JMenuItem("Exit");
+		menuItem2.setPreferredSize(new Dimension(150, menu.getPreferredSize().height));
+		menuItem2.addActionListener(this);
+		menuItem2.setActionCommand("Exit");
+		menu.add(menuItem2);
 
 		pnlContent.repaint();
 	}
@@ -249,6 +271,10 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 			if (JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?") == 0) {
 				System.exit(0);
 			}
+		}
+		if (e.getActionCommand().equalsIgnoreCase("About")) {
+			About aboutFrame = new About(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight());
+			aboutFrame.setVisible(true);
 		}
 	}
 
@@ -409,7 +435,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 
 	class panelContent extends JPanel {
 		panelContent() {
-			this.setBounds(20, 10, 700, 450);
+			this.setBounds(20, 50, 700, 450);
 			this.setBorder(BorderFactory.createBevelBorder(0));
 		}
 		public void paintComponent(Graphics g) {
