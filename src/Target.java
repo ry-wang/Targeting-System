@@ -1,21 +1,15 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,7 +24,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 
-public class Target extends JFrame implements ActionListener, ChangeListener, MouseMotionListener, MouseListener{
+public class Target extends JFrame implements ActionListener, ChangeListener {
+
+	private static final long serialVersionUID = 1L;
 
 	//Declaration of all GUI elements
 	private JPanel contentPane;
@@ -51,6 +47,8 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 	//Declaration of classes
 	private Turret turret;
 	private Object objectArray[];
+
+	//Declaration of data table
 	private JTable tblData;
 	private JScrollPane scrollPane;
 
@@ -61,6 +59,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 	private JLabel lblTurretXValue;
 	private JLabel lblTurretYValue;
 	private JLabel lblTurretRangeValue;
+
+	private JButton btnStart;
+	private JButton btnPause;
+	private JButton btnGenerate;
+	private JButton btnStop;
 
 
 	/**
@@ -98,7 +101,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		setIconImage(frameImg.getImage());
 
 		//Generate button
-		JButton btnGenerate = new JButton("Generate");
+		btnGenerate = new JButton("Generate");
 		btnGenerate.setBounds(781, 520, 137, 52);
 		contentPane.add(btnGenerate);
 		btnGenerate.addActionListener(this);
@@ -217,11 +220,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		sldTurretY.setValue(turret.getY());
 		sldRange.setValue(turret.getRange());
 
-		JButton btnExit = new JButton("Exit");
-		btnExit.setActionCommand("Exit");
-		btnExit.addActionListener(this);
-		btnExit.setBounds(992, 520, 137, 52);
-		contentPane.add(btnExit);
+		btnStart = new JButton("Start");
+		btnStart.setActionCommand("Start");
+		btnStart.addActionListener(this);
+		btnStart.setBounds(992, 520, 137, 52);
+		contentPane.add(btnStart);
 
 		//Set up data array and JTable
 		setUpTableArrays();
@@ -230,31 +233,45 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		scrollPane.setBounds(749, 51, 411, 325);
 		tblData.setVisible(false);
 		contentPane.add(scrollPane);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 1184, 21);
 		contentPane.add(menuBar);
-		
+
 		JMenu menu = new JMenu("File");
 		menuBar.add(menu);
-		
+
 		JMenuItem menuItem1 = new JMenuItem("About");
 		menuItem1.setPreferredSize(new Dimension(150, menu.getPreferredSize().height));
 		menuItem1.addActionListener(this);
 		menuItem1.setActionCommand("About");
 		menu.add(menuItem1);
-		
-		/*JMenuItem menuItem3 = new JMenuItem("Settings");
+
+		JMenuItem menuItem3 = new JMenuItem("Settings");
 		menuItem3.setPreferredSize(new Dimension(150, menu.getPreferredSize().height));
 		menuItem3.addActionListener(this);
 		menuItem3.setActionCommand("Settings");
-		menu.add(menuItem3);*/
-		
+		menu.add(menuItem3);
+
 		JMenuItem menuItem2 = new JMenuItem("Exit");
 		menuItem2.setPreferredSize(new Dimension(150, menu.getPreferredSize().height));
 		menuItem2.addActionListener(this);
 		menuItem2.setActionCommand("Exit");
 		menu.add(menuItem2);
+
+		btnPause = new JButton("Pause");
+		btnPause.setEnabled(false);
+		btnPause.setActionCommand("Pause");
+		btnPause.setBounds(992, 520, 137, 52);
+		btnPause.addActionListener(this);
+		contentPane.add(btnPause);
+
+		//Stop button
+		btnStop = new JButton("Stop");
+		btnStop.setBounds(781, 520, 137, 52);
+		contentPane.add(btnStop);
+		btnStop.addActionListener(this);
+		btnStop.setActionCommand("Stop");
 
 		pnlContent.repaint();
 	}
@@ -285,6 +302,49 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		if (e.getActionCommand().equalsIgnoreCase("About")) {
 			About aboutFrame = new About(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight());
 			aboutFrame.setVisible(true);
+		}
+		if (e.getActionCommand().equalsIgnoreCase("Start")) {
+			//Disable buttons and sliders, enable pause button
+			btnStart.setVisible(false);
+			btnStart.setEnabled(false);
+			btnPause.setVisible(true);
+			btnPause.setEnabled(true);
+			btnGenerate.setVisible(false);
+			sldTurretX.setEnabled(false);
+			sldTurretY.setEnabled(false);
+			sldRange.setEnabled(false);
+			sldTargetNum.setEnabled(false);
+			sldSize.setEnabled(false);
+			btnStop.setEnabled(true);
+			btnStop.setVisible(true);
+
+		}
+		if (e.getActionCommand().equalsIgnoreCase("Settings")) {
+			Settings settingFrame = new Settings(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight());
+			settingFrame.setVisible(true);
+		}
+		if (e.getActionCommand().equalsIgnoreCase("Pause")) {
+			//Show start button again, hide pause button
+			btnStart.setVisible(true);
+			btnStart.setEnabled(true);
+			btnPause.setVisible(false);
+			btnPause.setEnabled(false);
+			btnStop.setEnabled(true);
+
+		}
+		if (e.getActionCommand().equalsIgnoreCase("Stop")) {
+			//Enable buttons and sliders, hide pause button
+			btnStart.setVisible(true);
+			btnStart.setEnabled(true);
+			btnPause.setVisible(false);
+			btnPause.setEnabled(false);
+			sldTurretX.setEnabled(true);
+			sldTurretY.setEnabled(true);
+			sldRange.setEnabled(true);
+			sldTargetNum.setEnabled(true);
+			sldSize.setEnabled(true);
+			btnGenerate.setVisible(true);
+			btnStop.setVisible(false);
 		}
 	}
 
@@ -439,11 +499,10 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		scrollPane.repaint();
 	}
 
-	public void mouseDragged(MouseEvent me) {
-
-	}
-
 	class panelContent extends JPanel {
+
+		private static final long serialVersionUID = 1L;
+
 		panelContent() {
 			this.setBounds(20, 50, 700, 450);
 			this.setBorder(BorderFactory.createBevelBorder(0));
@@ -470,41 +529,5 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 				turret.paint(g);
 			}
 		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 }
