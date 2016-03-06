@@ -17,6 +17,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
@@ -92,6 +93,9 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		//Setting frame icon
+		ImageIcon frameImg = new ImageIcon(this.getClass().getResource("/Images/TS-Icon.png"));
+		setIconImage(frameImg.getImage());
 
 		//Generate button
 		JButton btnGenerate = new JButton("Generate");
@@ -239,6 +243,12 @@ public class Target extends JFrame implements ActionListener, ChangeListener, Mo
 		menuItem1.addActionListener(this);
 		menuItem1.setActionCommand("About");
 		menu.add(menuItem1);
+		
+		/*JMenuItem menuItem3 = new JMenuItem("Settings");
+		menuItem3.setPreferredSize(new Dimension(150, menu.getPreferredSize().height));
+		menuItem3.addActionListener(this);
+		menuItem3.setActionCommand("Settings");
+		menu.add(menuItem3);*/
 		
 		JMenuItem menuItem2 = new JMenuItem("Exit");
 		menuItem2.setPreferredSize(new Dimension(150, menu.getPreferredSize().height));

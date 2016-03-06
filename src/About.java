@@ -3,12 +3,15 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import javax.swing.SwingConstants;
 
 
@@ -45,29 +48,32 @@ public class About extends JFrame implements ActionListener {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		//Setting frame icon
+		ImageIcon frameImg = new ImageIcon(this.getClass().getResource("/Images/TS-Icon.png"));
+		setIconImage(frameImg.getImage());
+
 		btnReturn = new JButton("Return");
 		btnReturn.setBounds(161, 190, 111, 37);
 		btnReturn.addActionListener(this);
 		btnReturn.setActionCommand("Return");
 		contentPane.add(btnReturn);
-		
+
 		JLabel lblAbout = new JLabel("About");
 		lblAbout.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAbout.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		lblAbout.setBounds(161, 11, 111, 37);
 		contentPane.add(lblAbout);
-		
+
 		JLabel lblAbout1 = new JLabel("Made by: Ryan Wang");
 		lblAbout1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAbout1.setBounds(150, 74, 139, 25);
 		contentPane.add(lblAbout1);
-		
+
 		JLabel lblAbout2 = new JLabel("Version: 1.0");
 		lblAbout2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAbout2.setBounds(150, 106, 139, 25);
 		contentPane.add(lblAbout2);
-		
+
 		JLabel lblAbout3 = new JLabel("Simple application that targets objects");
 		lblAbout3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAbout3.setBounds(111, 142, 219, 26);
@@ -78,6 +84,6 @@ public class About extends JFrame implements ActionListener {
 		if (e.getActionCommand().equalsIgnoreCase("Return")) {
 			this.dispose();
 		}
-		
+
 	}
 }
