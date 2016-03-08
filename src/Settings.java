@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 
 public class Settings extends JFrame implements ActionListener {
@@ -55,6 +58,12 @@ public class Settings extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		btnReturn.setActionCommand("Return");
 		contentPane.add(btnReturn);
+		
+		JLabel lblSettings = new JLabel("Settings");
+		lblSettings.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblSettings.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSettings.setBounds(151, 23, 138, 49);
+		contentPane.add(lblSettings);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -64,5 +73,4 @@ public class Settings extends JFrame implements ActionListener {
 		}
 		
 	}
-
 }
