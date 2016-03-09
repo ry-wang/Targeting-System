@@ -260,7 +260,6 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 		menu.add(menuItem2);
 
 		btnPause = new JButton("Pause");
-		btnPause.setEnabled(false);
 		btnPause.setActionCommand("Pause");
 		btnPause.setBounds(992, 520, 137, 52);
 		btnPause.addActionListener(this);
@@ -306,16 +305,13 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 		if (e.getActionCommand().equalsIgnoreCase("Start")) {
 			//Disable buttons and sliders, enable pause button
 			btnStart.setVisible(false);
-			btnStart.setEnabled(false);
 			btnPause.setVisible(true);
-			btnPause.setEnabled(true);
 			btnGenerate.setVisible(false);
 			sldTurretX.setEnabled(false);
 			sldTurretY.setEnabled(false);
 			sldRange.setEnabled(false);
 			sldTargetNum.setEnabled(false);
 			sldSize.setEnabled(false);
-			btnStop.setEnabled(true);
 			btnStop.setVisible(true);
 
 		}
@@ -326,18 +322,13 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 		if (e.getActionCommand().equalsIgnoreCase("Pause")) {
 			//Show start button again, hide pause button
 			btnStart.setVisible(true);
-			btnStart.setEnabled(true);
 			btnPause.setVisible(false);
-			btnPause.setEnabled(false);
-			btnStop.setEnabled(true);
 
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Stop")) {
 			//Enable buttons and sliders, hide pause button
 			btnStart.setVisible(true);
-			btnStart.setEnabled(true);
 			btnPause.setVisible(false);
-			btnPause.setEnabled(false);
 			sldTurretX.setEnabled(true);
 			sldTurretY.setEnabled(true);
 			sldRange.setEnabled(true);

@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 
 public class Settings extends JFrame implements ActionListener {
@@ -19,6 +21,8 @@ public class Settings extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JButton btnReturn;
+	private JButton btnSave;
+	//private boolean changedValue = false;
 
 	/**
 	 * Launch the application, only used for debugging
@@ -53,17 +57,37 @@ public class Settings extends JFrame implements ActionListener {
 		
 		//Return button
 		btnReturn = new JButton("Return");
-		btnReturn.setBounds(161, 190, 111, 37);
+		btnReturn.setBounds(70, 190, 111, 37);
 		btnReturn.addActionListener(this);
 		contentPane.setLayout(null);
 		btnReturn.setActionCommand("Return");
 		contentPane.add(btnReturn);
 		
 		JLabel lblSettings = new JLabel("Settings");
-		lblSettings.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblSettings.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		lblSettings.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSettings.setBounds(151, 23, 138, 49);
+		lblSettings.setBounds(146, 23, 138, 49);
 		contentPane.add(lblSettings);
+		
+		JLabel lblTurretColour = new JLabel("Turret Colour: ");
+		lblTurretColour.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblTurretColour.setBounds(70, 88, 105, 24);
+		contentPane.add(lblTurretColour);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Black", "Blue", "Green", "Yellow", "Red", "Orange"}));
+		comboBox.setSelectedIndex(0);
+		comboBox.setBounds(248, 92, 80, 20);
+		comboBox.addActionListener(this);
+		comboBox.setActionCommand("Change");
+		contentPane.add(comboBox);
+		
+		btnSave = new JButton("Save");
+		btnSave.setActionCommand("Save");
+		btnSave.setBounds(248, 190, 111, 37);
+		btnSave.addActionListener(this);
+		btnSave.setEnabled(false);
+		contentPane.add(btnSave);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -71,6 +95,11 @@ public class Settings extends JFrame implements ActionListener {
 			
 			this.dispose();
 		}
-		
+		if (e.getActionCommand().equalsIgnoreCase("Save")) {
+			
+		}
+		if (e.getActionCommand().equalsIgnoreCase("Change")) {
+			btnSave.setEnabled(true);
+		}
 	}
 }
