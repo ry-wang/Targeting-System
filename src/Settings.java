@@ -22,6 +22,8 @@ public class Settings extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JButton btnReturn;
 	private JButton btnSave;
+	private Turret turretCopy;
+	private JComboBox comboBox;
 	//private boolean changedValue = false;
 
 	/**
@@ -31,7 +33,7 @@ public class Settings extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Settings frame = new Settings(100, 100, 500, 500);
+					Settings frame = new Settings(100, 100, 500, 500, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +45,8 @@ public class Settings extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Settings(int x, int y, int width, int height) {
+	public Settings(int x, int y, int width, int height, Turret turret) {
+		turretCopy = turret;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(x + width/2 - 450/4, y + height/2 - 20, 450, 300);
 		setTitle("Settings");
@@ -74,7 +77,7 @@ public class Settings extends JFrame implements ActionListener {
 		lblTurretColour.setBounds(70, 88, 105, 24);
 		contentPane.add(lblTurretColour);
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Black", "Blue", "Green", "Yellow", "Red", "Orange"}));
 		comboBox.setSelectedIndex(0);
 		comboBox.setBounds(248, 92, 80, 20);
@@ -96,7 +99,9 @@ public class Settings extends JFrame implements ActionListener {
 			this.dispose();
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Save")) {
-			
+			btnSave.setEnabled(false);
+			//turretCopy.setColour(comboBox.get)
+			this.dispose();
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Change")) {
 			btnSave.setEnabled(true);

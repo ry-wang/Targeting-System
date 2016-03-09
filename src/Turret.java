@@ -38,6 +38,9 @@ public class Turret {
 	public int getRadius() {
 		return radius;
 	}
+	public void setColour(String input) {
+		colour = input;
+	}
 	
 	public void paint(Graphics g) {
 		//Drawing turret itself
