@@ -99,8 +99,29 @@ public class Settings extends JFrame implements ActionListener {
 			this.dispose();
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Save")) {
+			String colour = "black";
 			btnSave.setEnabled(false);
-			//turretCopy.setColour(comboBox.get)
+			switch (comboBox.getSelectedIndex()){
+				case 0:
+					colour = "black";
+				break;
+				case 1:
+					colour = "blue";
+				break;
+				case 2:
+					colour = "green";
+				break;
+				case 3:
+					colour = "yellow";
+				break;
+				case 4:
+					colour = "red";
+				break;
+				case 5:
+					colour = "orange";
+				break;
+			}
+			turretCopy.setColour(colour);
 			this.dispose();
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Change")) {
