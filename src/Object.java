@@ -7,6 +7,7 @@ public class Object {
 	private int x;
 	private int y;
 	private int r;
+	private int priority;
 	private double distance;
 	private String colorType;
 	private int number;
@@ -18,6 +19,7 @@ public class Object {
 		r = radius;
 		colorType = cType;
 		withinRange = false;
+		priority = (int) (Math.random()*5) + 1;
 	}
 	
 	public int getX() {
@@ -43,6 +45,9 @@ public class Object {
 	}
 	public int getRadius() {
 		return r;
+	}
+	public int getPriority() {
+		return priority;
 	}
 	public void setWithinRange(boolean input) {
 		withinRange = input;
