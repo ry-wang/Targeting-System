@@ -36,7 +36,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 	private int range;
 	private int totalNumTargets;
 	private String[][] dataArray;
-	private String[] tableHeaders = new String[4];
+	private String[] tableHeaders = new String[5];
 
 	private JSlider sldSize;
 	private JSlider sldRange;
@@ -281,9 +281,10 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 		tableHeaders[0] = "Number";
 		tableHeaders[1] = "Colour";
 		tableHeaders[2] = "Distance";
-		tableHeaders[3] = "Within Range";
+		tableHeaders[3] = "Priority";
+		tableHeaders[4] = "Within Range";
 
-		dataArray = new String[10][4];
+		dataArray = new String[10][5];
 	}
 
 	//Method to deal with button clicks
@@ -353,6 +354,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 				dataArray[i][1] = "";
 				dataArray[i][2] = "";
 				dataArray[i][3] = "";
+				dataArray[i][4] = "";
 			}
 		}
 
@@ -391,6 +393,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 			//Setting info in dataArray
 			dataArray[i][1] = color;
 			dataArray[i][0] = String.valueOf(i+1);
+			dataArray[i][3] = String.valueOf(objectArray[i].getPriority());
 		}
 
 		tblData.setRowHeight((scrollPane.getHeight()-21)/totalNumTargets);
@@ -472,11 +475,11 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 			//Set within range attribute of object to true when distance is close enough
 			if (objectArray[i].getDistance() - objectArray[i].getRadius()/2 <= (double)turret.getRange()/2) {
 				objectArray[i].setWithinRange(true);
-				dataArray[i][3] = "true";
+				dataArray[i][4] = "true";
 			}
 			else {
 				objectArray[i].setWithinRange(false);
-				dataArray[i][3] = "false";
+				dataArray[i][4] = "false";
 			}
 
 			dataArray[i][2] = String.valueOf((int) objectArray[i].getDistance());
