@@ -66,6 +66,8 @@ public class Turret {
 		}
 		g.fillOval(x, y, radius, radius);
 		
+		
+		g.setColor(Color.BLACK);
 		//Drawing turret range
 		g.drawOval(x + radius/2 - range/2, y + radius/2 - range/2, range, range);
 	}

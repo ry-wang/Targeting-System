@@ -317,7 +317,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Settings")) {
-			Settings settingFrame = new Settings(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight(), turret);
+			Settings settingFrame = new Settings(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight());
 			settingFrame.setVisible(true);
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Pause")) {

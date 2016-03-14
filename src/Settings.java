@@ -33,7 +33,7 @@ public class Settings extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Settings frame = new Settings(100, 100, 500, 500, null);
+					Settings frame = new Settings(100, 100, 500, 500);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,8 +45,7 @@ public class Settings extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Settings(int x, int y, int width, int height, Turret turret) {
-		turretCopy = turret;
+	public Settings(int x, int y, int width, int height) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(x + width/2 - 450/4, y + height/2 - 20, 450, 300);
 		setTitle("Settings");
@@ -95,7 +94,6 @@ public class Settings extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equalsIgnoreCase("Return")) {
-			
 			this.dispose();
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Save")) {
@@ -121,7 +119,7 @@ public class Settings extends JFrame implements ActionListener {
 					colour = "orange";
 				break;
 			}
-			turretCopy.setColour(colour);
+			//turretCopy.setColour(colour);
 			this.dispose();
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Change")) {
