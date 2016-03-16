@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.awt.Graphics;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
@@ -22,7 +24,7 @@ public class Settings extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JButton btnReturn;
 	private JButton btnSave;
-	private Turret turretCopy;
+	private Turret turretInstance;
 	private JComboBox comboBox;
 	//private boolean changedValue = false;
 
@@ -33,7 +35,7 @@ public class Settings extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Settings frame = new Settings(100, 100, 500, 500);
+					Settings frame = new Settings(100, 100, 500, 500, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,7 +47,8 @@ public class Settings extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Settings(int x, int y, int width, int height) {
+	public Settings(int x, int y, int width, int height, Turret turret) {
+		turretInstance = turret;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(x + width/2 - 450/4, y + height/2 - 20, 450, 300);
 		setTitle("Settings");
@@ -119,7 +122,9 @@ public class Settings extends JFrame implements ActionListener {
 					colour = "orange";
 				break;
 			}
-			//turretCopy.setColour(colour);
+			//turretInstance.setColour(colour);
+			Target.getTurretInstance().setColour(colour);
+			//System.out.println("set");
 			this.dispose();
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Change")) {

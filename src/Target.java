@@ -45,7 +45,8 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 	private JSlider sldTurretY;
 
 	//Declaration of classes
-	private Turret turret;
+	private static Turret turret;
+	private Settings settingFrame;
 	private Object objectArray[];
 
 	//Declaration of data table
@@ -317,7 +318,7 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Settings")) {
-			Settings settingFrame = new Settings(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight());
+			settingFrame = new Settings(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight(), turret);
 			settingFrame.setVisible(true);
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Pause")) {
@@ -457,7 +458,9 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 
 		pnlContent.repaint();
 	}
-
+	public static Turret getTurretInstance() {
+		return turret;
+	}
 	public void calculateDistances() {
 		if (objectArray == null) {
 			return;
