@@ -101,13 +101,6 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 		ImageIcon frameImg = new ImageIcon(this.getClass().getResource("/Images/TS-Icon.png"));
 		setIconImage(frameImg.getImage());
 
-		//Generate button
-		btnGenerate = new JButton("Generate");
-		btnGenerate.setBounds(781, 520, 137, 52);
-		contentPane.add(btnGenerate);
-		btnGenerate.addActionListener(this);
-		btnGenerate.setActionCommand("Generate");
-
 		//Add new panelContent which is used for painting
 		pnlContent = new panelContent();
 		contentPane.add(pnlContent);
@@ -221,12 +214,6 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 		sldTurretY.setValue(turret.getY());
 		sldRange.setValue(turret.getRange());
 
-		btnStart = new JButton("Start");
-		btnStart.setActionCommand("Start");
-		btnStart.addActionListener(this);
-		btnStart.setBounds(992, 520, 137, 52);
-		contentPane.add(btnStart);
-
 		//Set up data array and JTable
 		setUpTableArrays();
 		tblData = new JTable(dataArray, tableHeaders);
@@ -260,6 +247,25 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 		menuItem2.setActionCommand("Exit");
 		menu.add(menuItem2);
 
+		generateButtons();
+		pnlContent.repaint();
+	}
+
+	//Method that creates all buttons of UI
+	public void generateButtons() {
+		//Generate button
+		btnGenerate = new JButton("Generate");
+		btnGenerate.setBounds(781, 520, 137, 52);
+		contentPane.add(btnGenerate);
+		btnGenerate.addActionListener(this);
+		btnGenerate.setActionCommand("Generate");
+
+		btnStart = new JButton("Start");
+		btnStart.setActionCommand("Start");
+		btnStart.addActionListener(this);
+		btnStart.setBounds(992, 520, 137, 52);
+		contentPane.add(btnStart);
+
 		btnPause = new JButton("Pause");
 		btnPause.setActionCommand("Pause");
 		btnPause.setBounds(992, 520, 137, 52);
@@ -272,8 +278,6 @@ public class Target extends JFrame implements ActionListener, ChangeListener {
 		contentPane.add(btnStop);
 		btnStop.addActionListener(this);
 		btnStop.setActionCommand("Stop");
-
-		pnlContent.repaint();
 	}
 
 	//Method to initialize all the data entries to 0
