@@ -2,44 +2,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 
-public class Turret {
+public class Turret extends Object {
 	
-	private int x;
-	private int y;
-	private int radius;
 	private int range;
-	private String colour = "black";
 	
 	Turret(int xPos, int yPos, int r, int ran) {
-		x = xPos;
-		y = yPos;
-		radius = r;
-		range = ran;
+		super(xPos, yPos, r, "black");
+		this.range = ran;
 	}
 	
-	public int getX() {
-		return x;
-	}
-	public int getY() {
-		return y;
-	}
 	public int getRange() {
 		return range;
 	}
 	public void setRange(int newRange) {
 		range = newRange;
-	}
-	public void setX(int input) {
-		x = input;
-	}
-	public void setY(int input) {
-		y = input;
-	}
-	public int getRadius() {
-		return radius;
-	}
-	public void setColour(String input) {
-		colour = input;
 	}
 	
 	public void paint(Graphics g) {
