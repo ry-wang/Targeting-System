@@ -1,23 +1,28 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
-
+//Turret class, inherits from Object
 public class Turret extends Object {
 	
+	//Fields of Turret class
 	private int range;
 	
+	//Constructor for this class
 	Turret(int xPos, int yPos, int r, int ran) {
+		//Calls constructor for superclass, which is Object
 		super(xPos, yPos, r, "black");
+		//Turret-specific variables are set
 		this.range = ran;
 	}
 	
+	//Additional methods unique to this class
 	public int getRange() {
 		return range;
 	}
 	public void setRange(int newRange) {
 		range = newRange;
 	}
-	
+	//Paint class, where the turret is painted
 	public void paint(Graphics g) {
 		//Drawing turret itself
 		switch (colour) {
