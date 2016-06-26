@@ -30,7 +30,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 
 	//Declaration of all GUI elements
 	private JPanel contentPane;
-	private JPanel pnlContent;
+	private static JPanel pnlContent;
 
 	private int ballSize;
 	private int range;
@@ -327,7 +327,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			btnStop.setVisible(true);
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Settings")) {
-			settingFrame = new Settings(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight(), turret);
+			settingFrame = new Settings(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight(), turret, pnlContent);
 			settingFrame.setVisible(true);
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Pause")) {
@@ -467,8 +467,13 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 
 		pnlContent.repaint();
 	}
+	//Return the static instance of turret so that it can be accessed by the settings page
 	public static Turret getTurretInstance() {
 		return turret;
+	}
+	//Return the static instance of pnlContent so it can be accessed by the settings page
+	public static JPanel getContentPanelInstance() {
+		return pnlContent;
 	}
 	public void calculateDistances() {
 		if (targetArray == null) {

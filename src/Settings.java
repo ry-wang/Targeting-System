@@ -9,13 +9,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
 import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-
+//Settings class, where user can modify settings
 public class Settings extends JFrame implements ActionListener {
 
 
@@ -25,8 +26,8 @@ public class Settings extends JFrame implements ActionListener {
 	private JButton btnReturn;
 	private JButton btnSave;
 	private Turret turretInstance;
+	private JPanel mainContentPanelInstance;
 	private JComboBox comboBox;
-	//private boolean changedValue = false;
 
 	/**
 	 * Launch the application, only used for debugging
@@ -35,7 +36,7 @@ public class Settings extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Settings frame = new Settings(100, 100, 500, 500, null);
+					Settings frame = new Settings(100, 100, 500, 500, null, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,7 +48,8 @@ public class Settings extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public Settings(int x, int y, int width, int height, Turret turret) {
+	public Settings(int x, int y, int width, int height, Turret turret, JPanel contentPanel) {
+		mainContentPanelInstance = contentPanel;
 		turretInstance = turret;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(x + width/2 - 450/4, y + height/2 - 20, 450, 300);
@@ -68,6 +70,7 @@ public class Settings extends JFrame implements ActionListener {
 		btnReturn.setActionCommand("Return");
 		contentPane.add(btnReturn);
 		
+		//Creating labels
 		JLabel lblSettings = new JLabel("Settings");
 		lblSettings.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		lblSettings.setHorizontalAlignment(SwingConstants.CENTER);
@@ -79,6 +82,7 @@ public class Settings extends JFrame implements ActionListener {
 		lblTurretColour.setBounds(70, 88, 105, 24);
 		contentPane.add(lblTurretColour);
 		
+		//Creating combobox with the various colour options
 		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Black", "Blue", "Green", "Yellow", "Red", "Orange"}));
 		comboBox.setSelectedIndex(0);
@@ -121,9 +125,14 @@ public class Settings extends JFrame implements ActionListener {
 				case 5:
 					colour = "orange";
 				break;
+				default:
+					colour = "black";
+				break;
 			}
-			//turretInstance.setColour(colour);
-			Target.getTurretInstance().setColour(colour);
+			turretInstance.setColour(colour);
+			Main.getTurretInstance().setColour(colour);
+			Main.getContentPanelInstance().repaint();
+			
 			//System.out.println("set");
 			this.dispose();
 		}
