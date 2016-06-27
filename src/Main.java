@@ -4,6 +4,9 @@ import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -65,6 +68,14 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 	private JButton btnPause;
 	private JButton btnGenerate;
 	private JButton btnStop;
+	
+	private Timer simulationTimer = new Timer();
+	private TimerTask simulationTask = new TimerTask() {
+		public void run() {
+			//Debug statement
+			System.out.println("Running task");
+		}
+	};
 
 	/**
 	 * Launch the application.
@@ -129,12 +140,14 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 		btnStart.setActionCommand("Start");
 		btnStart.addActionListener(this);
 		btnStart.setBounds(992, 520, 137, 52);
+		btnStart.setEnabled(false);
 		contentPane.add(btnStart);
 
 		btnPause = new JButton("Pause");
 		btnPause.setActionCommand("Pause");
 		btnPause.setBounds(992, 520, 137, 52);
 		btnPause.addActionListener(this);
+		btnPause.setVisible(false);
 		contentPane.add(btnPause);
 
 		//Stop button
@@ -304,6 +317,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 		if (e.getActionCommand().equalsIgnoreCase("Generate")) {
 			range = sldRange.getValue();
 			generateObjects();
+			btnStart.setEnabled(true);
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Exit")) {
 			if (JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?") == 0) {
@@ -325,6 +339,9 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			sldTargetNum.setEnabled(false);
 			sldSize.setEnabled(false);
 			btnStop.setVisible(true);
+			
+			//Start the timer
+			simulationTimer.scheduleAtFixedRate(simulationTask, 0, 1000);
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Settings")) {
 			settingFrame = new Settings(contentPane.getX(), contentPane.getY(), contentPane.getWidth(), contentPane.getHeight(), turret, pnlContent);
@@ -334,7 +351,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			//Show start button again, hide pause button
 			btnStart.setVisible(true);
 			btnPause.setVisible(false);
-
+			
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Stop")) {
 			//Enable buttons and sliders, hide pause button
@@ -347,6 +364,9 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			sldSize.setEnabled(true);
 			btnGenerate.setVisible(true);
 			btnStop.setVisible(false);
+			
+			//Stop the simulation
+			simulationTimer.cancel();
 		}
 	}
 
