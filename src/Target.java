@@ -40,6 +40,9 @@ public class Target extends Object {
 	public void setNumber(int input) {
 		number = input;
 	}
+	public int getTargetNumber() {
+		return number;
+	}
 	public int getPriority() {
 		return priority;
 	}

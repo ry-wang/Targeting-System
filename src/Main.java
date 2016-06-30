@@ -40,6 +40,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 	private int totalNumTargets;
 	private String[][] dataArray;
 	private String[] tableHeaders = new String[5];
+	private Double[] targetDistances;
 
 	private JSlider sldSize;
 	private JSlider sldRange;
@@ -69,11 +70,51 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 	private JButton btnGenerate;
 	private JButton btnStop;
 	
+	private boolean turretMoving = false;
+	
 	private Timer simulationTimer = new Timer();
+
+	public void destroyTarget(int index) {
+		//Pause the timer responsible for moving the object
+		System.out.println("firing shot");
+		//Draw line, then pause for a short amount of time
+		try {
+			Thread.sleep(1000);
+		}
+		catch (InterruptedException e) {
+
+		}
+		System.out.println("later");
+	}
+	
 	private TimerTask simulationTask = new TimerTask() {
 		public void run() {
 			//Debug statement
 			System.out.println("Running task");
+			
+			//Turret isn't moving, need to calculate next closest object
+			if (turretMoving == false) {
+				//Calculate closest object
+				int minIndex = 0;	
+				for (int i = 0; i < targetArray.length-1; i++) {
+					if (targetArray[i] != null && (int) targetArray[i].getDistance() > (int) targetArray[i+1].getDistance()) {
+						minIndex = i+1;
+					}
+				}
+				
+				Target objectToTarget = targetArray[minIndex];
+				//System.out.println(objectToTarget.getTargetNumber());
+				
+				//Now check if it's within range, before we need to move the turret
+				if (targetArray[minIndex].withinRange()) {
+					//Within range, call animation to destroy 
+					destroyTarget(minIndex);
+				}
+				//Not in range, so turret must move
+				else {
+					turretMoving = true;
+				}
+			}
 		}
 	};
 
@@ -116,7 +157,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 		contentPane.add(pnlContent);
 
 		//Create turret object
-		turret = new Turret(pnlContent.getWidth()/2, pnlContent.getHeight()/2, 10, 20);
+		turret = new Turret(pnlContent.getWidth()/2, pnlContent.getHeight()/2, 10, 100);
 
 		//Set up the GUI and refresh
 		setUpTable();
@@ -227,7 +268,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 
 		//Create slider for range
 		sldRange = new JSlider();
-		sldRange.setValue(300);
+		sldRange.setValue(100);
 		sldRange.setMinimum(20);
 		sldRange.setMaximum(pnlContent.getHeight() - 50);
 		sldRange.setBounds(260, 530, 200, 26);
@@ -391,6 +432,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 		//Get total number of targets from slider value, then create targetArray
 		totalNumTargets = sldTargetNum.getValue();
 		targetArray = new Target[totalNumTargets];
+		targetDistances = new Double[totalNumTargets];
 
 		if (sldSize.getValue() == 1) {
 			ballSize = 20; // Radius
@@ -406,20 +448,23 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			y = (int) (Math.random() * 300) + 50;
 			c = (int) (Math.random() * 5) + 1;
 			switch (c) {
-			case 1: color = "black";
-			break;
-			case 2: color = "blue";
-			break;
-			case 3: color = "green";
-			break;
-			case 4: color = "red";
-			break;
-			case 5: color = "yellow";
-			break;
-			default: color = "black";
+				case 1: color = "black";
+				break;
+				case 2: color = "blue";
+				break;
+				case 3: color = "green";
+				break;
+				case 4: color = "red";
+				break;
+				case 5: color = "yellow";
+				break;
+				default: color = "black";
 			}
 			//Creating object
 			targetArray[i] = new Target(x, y, ballSize, color);
+			//Setting number attribute of each object
+			targetArray[i].setNumber((i + 1));
+			
 			//Setting info in dataArray
 			dataArray[i][1] = color;
 			dataArray[i][0] = String.valueOf(i+1);
@@ -427,17 +472,10 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 		}
 
 		tblData.setRowHeight((scrollPane.getHeight()-21)/totalNumTargets);
-
-		//Setting number attribute of each object
-		setObjectNumber();
+		
 		//Calculate distances, which updates JTable, then repaint
 		calculateDistances();
 		pnlContent.repaint();
-	}
-	public void setObjectNumber() {
-		for (int i = 0; i < targetArray.length; i++) {
-			targetArray[i].setNumber((i + 1));
-		}
 	}
 
 	public void stateChanged(ChangeEvent evt) {
@@ -520,9 +558,11 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			}
 
 			dataArray[i][2] = String.valueOf((int) targetArray[i].getDistance());
-
+			
+			targetDistances[i] = distance;
+			System.out.println(targetDistances[i]);
 			//Temp Display
-			System.out.println("Object Number: " + (i+1) + "  Distance: " + targetArray[i].getDistance() + "cm" + " " + turret.getRange());
+			//System.out.println("Object Number: " + (i+1) + "  Distance: " + targetArray[i].getDistance() + "cm" + " " + turret.getRange());
 		}
 		pnlContent.repaint();
 		((AbstractTableModel) tblData.getModel()).fireTableDataChanged();
