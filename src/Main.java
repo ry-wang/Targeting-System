@@ -70,16 +70,23 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 	private JButton btnGenerate;
 	private JButton btnStop;
 	
+	private int minIndex = 0;
 	private boolean turretMoving = false;
+	private boolean firingShot = false;
 	
 	private Timer simulationTimer = new Timer();
 
-	public void destroyTarget(int index) {
+	public void destroyTarget() {
 		//Pause the timer responsible for moving the object
 		System.out.println("firing shot");
 		//Draw line, then pause for a short amount of time
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(2000);
+			firingShot = true;
+			this.repaint();
+			Thread.sleep(2000);
+			firingShot = false;
+			this.repaint();
 		}
 		catch (InterruptedException e) {
 
@@ -90,12 +97,11 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 	private TimerTask simulationTask = new TimerTask() {
 		public void run() {
 			//Debug statement
-			System.out.println("Running task");
+			//System.out.println("Running task");
 			
 			//Turret isn't moving, need to calculate next closest object
 			if (turretMoving == false) {
 				//Calculate closest object
-				int minIndex = 0;	
 				for (int i = 0; i < targetArray.length-1; i++) {
 					if (targetArray[i] != null && (int) targetArray[i].getDistance() > (int) targetArray[i+1].getDistance()) {
 						minIndex = i+1;
@@ -103,12 +109,13 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 				}
 				
 				Target objectToTarget = targetArray[minIndex];
-				//System.out.println(objectToTarget.getTargetNumber());
+				System.out.println(objectToTarget.getTargetNumber());
 				
 				//Now check if it's within range, before we need to move the turret
 				if (targetArray[minIndex].withinRange()) {
+					System.out.println("within range");
 					//Within range, call animation to destroy 
-					destroyTarget(minIndex);
+					destroyTarget();
 				}
 				//Not in range, so turret must move
 				else {
@@ -560,7 +567,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			dataArray[i][2] = String.valueOf((int) targetArray[i].getDistance());
 			
 			targetDistances[i] = distance;
-			System.out.println(targetDistances[i]);
+			//System.out.println(targetDistances[i]);
 			//Temp Display
 			//System.out.println("Object Number: " + (i+1) + "  Distance: " + targetArray[i].getDistance() + "cm" + " " + turret.getRange());
 		}
@@ -592,12 +599,19 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 						int y1 = targetArray[i].getY();
 						int x2 = turret.getX() + turret.getRadius()/2;
 						int y2 = turret.getY() + turret.getRadius()/2;
-						g.drawLine(x1, y1, x2, y2);
+						if (firingShot == false) {
+							g.drawLine(x1, y1, x2, y2);
+						}
 					}
 				}
 			}
 			if (turret != null) {
 				turret.paint(g);
+			}
+			
+			if (firingShot == true) {
+				g.setColor(Color.red);
+				g.drawLine(turret.getX(), turret.getY(), targetArray[minIndex].getX(), targetArray[minIndex].getY());
 			}
 		}
 	}
