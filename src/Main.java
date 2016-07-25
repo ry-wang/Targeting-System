@@ -97,19 +97,25 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 	private TimerTask simulationTask = new TimerTask() {
 		public void run() {
 			//Debug statement
-			//System.out.println("Running task");
+			System.out.println("Running task");
+			
+			minIndex = 0;
 			
 			//Turret isn't moving, need to calculate next closest object
 			if (turretMoving == false) {
 				//Calculate closest object
 				for (int i = 0; i < targetArray.length-1; i++) {
-					if (targetArray[i] != null && (int) targetArray[i].getDistance() > (int) targetArray[i+1].getDistance()) {
+					//System.out.println(minIndex);
+					if (((int) targetArray[i].getDistance() > (int) targetArray[i+1].getDistance())) {
 						minIndex = i+1;
 					}
 				}
 				
-				Target objectToTarget = targetArray[minIndex];
-				System.out.println(objectToTarget.getTargetNumber());
+				//This line is causing problems
+				//Target objectToTarget = targetArray[minIndex];
+				
+				//System.out.println(objectToTarget.getTargetNumber());
+				System.out.println(targetArray[minIndex].getDistance());
 				
 				//Now check if it's within range, before we need to move the turret
 				if (targetArray[minIndex].withinRange()) {
@@ -595,11 +601,11 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 					targetArray[i].paint(g);
 					g.setColor(Color.blue);
 					if (targetArray[i].withinRange()) {
-						int x1= targetArray[i].getX();
-						int y1 = targetArray[i].getY();
-						int x2 = turret.getX() + turret.getRadius()/2;
-						int y2 = turret.getY() + turret.getRadius()/2;
 						if (firingShot == false) {
+							int x1= targetArray[i].getX();
+							int y1 = targetArray[i].getY();
+							int x2 = turret.getX() + turret.getRadius()/2;
+							int y2 = turret.getY() + turret.getRadius()/2;
 							g.drawLine(x1, y1, x2, y2);
 						}
 					}
