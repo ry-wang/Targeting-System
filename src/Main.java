@@ -69,11 +69,11 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 	private JButton btnPause;
 	private JButton btnGenerate;
 	private JButton btnStop;
-	
+
 	private int minIndex = 0;
 	private boolean turretMoving = false;
 	private boolean firingShot = false;
-	
+
 	private Timer simulationTimer = new Timer();
 
 	public void destroyTarget() {
@@ -92,36 +92,40 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 
 		}
 		System.out.println("later");
+		
 	}
-	
+
 	private TimerTask simulationTask = new TimerTask() {
 		public void run() {
 			//Debug statement
 			System.out.println("Running task");
-			
+
 			minIndex = 0;
-			
+
 			//Turret isn't moving, need to calculate next closest object
 			if (turretMoving == false) {
 				//Calculate closest object
-				for (int i = 0; i < targetArray.length-1; i++) {
-					//System.out.println(minIndex);
-					if (((int) targetArray[i].getDistance() > (int) targetArray[i+1].getDistance())) {
-						minIndex = i+1;
+				for (int i = 0; i < targetArray.length; i++) {
+					System.out.println(i);
+					if (targetArray[minIndex] != null && targetArray[i] != null) {
+						if (((int) targetArray[minIndex].getDistance() > (int) targetArray[i].getDistance())) {
+							minIndex = i;
+						}
 					}
 				}
-				
+				System.out.println(minIndex);
 				//This line is causing problems
 				//Target objectToTarget = targetArray[minIndex];
-				
+
 				//System.out.println(objectToTarget.getTargetNumber());
 				System.out.println(targetArray[minIndex].getDistance());
-				
+
 				//Now check if it's within range, before we need to move the turret
 				if (targetArray[minIndex].withinRange()) {
 					System.out.println("within range");
 					//Within range, call animation to destroy 
 					destroyTarget();
+					targetArray[minIndex] = null;
 				}
 				//Not in range, so turret must move
 				else {
@@ -393,7 +397,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			sldTargetNum.setEnabled(false);
 			sldSize.setEnabled(false);
 			btnStop.setVisible(true);
-			
+
 			//Start the timer
 			simulationTimer.scheduleAtFixedRate(simulationTask, 0, 1000);
 		}
@@ -405,7 +409,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			//Show start button again, hide pause button
 			btnStart.setVisible(true);
 			btnPause.setVisible(false);
-			
+
 		}
 		if (e.getActionCommand().equalsIgnoreCase("Stop")) {
 			//Enable buttons and sliders, hide pause button
@@ -418,7 +422,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			sldSize.setEnabled(true);
 			btnGenerate.setVisible(true);
 			btnStop.setVisible(false);
-			
+
 			//Stop the simulation
 			simulationTimer.cancel();
 		}
@@ -461,23 +465,23 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			y = (int) (Math.random() * 300) + 50;
 			c = (int) (Math.random() * 5) + 1;
 			switch (c) {
-				case 1: color = "black";
-				break;
-				case 2: color = "blue";
-				break;
-				case 3: color = "green";
-				break;
-				case 4: color = "red";
-				break;
-				case 5: color = "yellow";
-				break;
-				default: color = "black";
+			case 1: color = "black";
+			break;
+			case 2: color = "blue";
+			break;
+			case 3: color = "green";
+			break;
+			case 4: color = "red";
+			break;
+			case 5: color = "yellow";
+			break;
+			default: color = "black";
 			}
 			//Creating object
 			targetArray[i] = new Target(x, y, ballSize, color);
 			//Setting number attribute of each object
 			targetArray[i].setNumber((i + 1));
-			
+
 			//Setting info in dataArray
 			dataArray[i][1] = color;
 			dataArray[i][0] = String.valueOf(i+1);
@@ -485,7 +489,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 		}
 
 		tblData.setRowHeight((scrollPane.getHeight()-21)/totalNumTargets);
-		
+
 		//Calculate distances, which updates JTable, then repaint
 		calculateDistances();
 		pnlContent.repaint();
@@ -571,7 +575,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			}
 
 			dataArray[i][2] = String.valueOf((int) targetArray[i].getDistance());
-			
+
 			targetDistances[i] = distance;
 			//System.out.println(targetDistances[i]);
 			//Temp Display
@@ -598,15 +602,17 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 
 			if (targetArray != null) {
 				for (int i = 0; i<targetArray.length; i++) {
-					targetArray[i].paint(g);
-					g.setColor(Color.blue);
-					if (targetArray[i].withinRange()) {
-						if (firingShot == false) {
-							int x1= targetArray[i].getX();
-							int y1 = targetArray[i].getY();
-							int x2 = turret.getX() + turret.getRadius()/2;
-							int y2 = turret.getY() + turret.getRadius()/2;
-							g.drawLine(x1, y1, x2, y2);
+					if (targetArray[i] != null) {
+						targetArray[i].paint(g);
+						g.setColor(Color.blue);
+						if (targetArray[i].withinRange()) {
+							if (firingShot == false) {
+								int x1= targetArray[i].getX();
+								int y1 = targetArray[i].getY();
+								int x2 = turret.getX() + turret.getRadius()/2;
+								int y2 = turret.getY() + turret.getRadius()/2;
+								g.drawLine(x1, y1, x2, y2);
+							}
 						}
 					}
 				}
@@ -614,7 +620,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			if (turret != null) {
 				turret.paint(g);
 			}
-			
+
 			if (firingShot == true) {
 				g.setColor(Color.red);
 				g.drawLine(turret.getX(), turret.getY(), targetArray[minIndex].getX(), targetArray[minIndex].getY());
