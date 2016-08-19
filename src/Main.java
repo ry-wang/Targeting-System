@@ -100,7 +100,12 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 			//Debug statement
 			System.out.println("Running task");
 
-			minIndex = 0;
+			//Set minIndex to be the first one that's not null
+			for (int i = 0; i < targetArray.length; i++) {
+				if (targetArray[i] != null) {
+					minIndex = i;
+				}
+			}
 
 			//Turret isn't moving, need to calculate next closest object
 			if (turretMoving == false) {
@@ -113,11 +118,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 						}
 					}
 				}
-				System.out.println(minIndex);
-				//This line is causing problems
-				//Target objectToTarget = targetArray[minIndex];
 
-				//System.out.println(objectToTarget.getTargetNumber());
 				System.out.println(targetArray[minIndex].getDistance());
 
 				//Now check if it's within range, before we need to move the turret
@@ -126,11 +127,16 @@ public class Main extends JFrame implements ActionListener, ChangeListener {
 					//Within range, call animation to destroy 
 					destroyTarget();
 					targetArray[minIndex] = null;
+					//dataArray[minIndex] = null;
 				}
 				//Not in range, so turret must move
 				else {
 					turretMoving = true;
 				}
+			}
+			//turretMoving == true
+			else {
+				
 			}
 		}
 	};

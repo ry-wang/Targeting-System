@@ -22,6 +22,11 @@ public class Turret extends Object {
 	public void setRange(int newRange) {
 		range = newRange;
 	}
+	
+	public void move(float angle) {
+
+	}
+	
 	//Paint class, where the turret is painted
 	public void paint(Graphics g) {
 		//Drawing turret itself
