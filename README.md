@@ -9,3 +9,11 @@ The data is displayed in a JTable, and the user can customize how many objects t
 the range as well as the position of the turret
 
 Version 1.0
+
+###Version 2.0###
+
+Add a simulation to the program, where the turret will automatically find the closest targets and shoot them with the range specified, until there are no more targets left.
+
+###Development###
+
+Development is done through the Eclipse IDE. Clone this repository and import it into your Eclipse workspace.
