@@ -10,7 +10,7 @@ the range as well as the position of the turret
 
 Version 1.0
 
-###Version 2.0###
+###Version 2.0 Objectives###
 
 Add a simulation to the program, where the turret will automatically find the closest targets and shoot them with the range specified, until there are no more targets left.
 
